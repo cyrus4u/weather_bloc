@@ -1,22 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:weather_bloc/core/widgets/main_wrapper.dart';
-import 'package:weather_bloc/features/feature_weather/data/data_source/remote/api_provider.dart';
-import 'package:weather_bloc/features/feature_weather/data/repository/weather_repositoryimpl.dart';
-import 'package:weather_bloc/features/feature_weather/domain/use_cases/get_current_weather_usecase.dart';
+import 'package:weather_bloc/features/feature_weather/presentation/bloc/bloc/home_bloc.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+import 'package:weather_bloc/locator.dart';
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    GetCurrentWeatherUsecase getCurrentWeatherUsecase =
-        GetCurrentWeatherUsecase(WeatherRepositoryImpl(ApiProvider()));
-    getCurrentWeatherUsecase('Tehran');
-    return MaterialApp(debugShowCheckedModeBanner: false, home: MainWrapper());
-  }
+void main() async {
+  /// init locator
+  await setup();
+  runApp(
+    MaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: MultiBlocProvider(
+        providers: [BlocProvider(create: (context) => locator<HomeBloc>())],
+        child: MainWrapper(),
+      ),
+    ),
+  );
 }
