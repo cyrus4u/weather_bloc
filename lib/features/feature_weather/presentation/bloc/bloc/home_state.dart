@@ -1,15 +1,30 @@
 part of 'home_bloc.dart';
 
-class HomeState extends Equatable{
-  final CwStatus cwStatus;
-  const HomeState({required this.cwStatus});
 
-  HomeState copyWith({CwStatus? newCwStatus}) {
-    return HomeState(cwStatus: newCwStatus ?? cwStatus);
-  }
-  
+
+sealed class HomeState extends Equatable {
+  const HomeState();
+
   @override
- 
-  List<Object?> get props => [cwStatus];
+  List<Object?> get props => [];
 }
 
+final class HomeLoading extends HomeState {}
+
+final class HomeCompleted extends HomeState {
+  final CurrentCityEntity city;
+
+  const HomeCompleted(this.city);
+
+  @override
+  List<Object?> get props => [city];
+}
+
+final class HomeError extends HomeState {
+  final String message;
+
+  const HomeError(this.message);
+
+  @override
+  List<Object?> get props => [message];
+}
