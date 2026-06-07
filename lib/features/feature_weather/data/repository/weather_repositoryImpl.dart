@@ -12,7 +12,6 @@ class WeatherRepositoryImpl extends WeatherRepository {
 
   WeatherRepositoryImpl(this.apiProvider);
 
- 
   Future<Coordinates?> _getCoordinates(String cityName) async {
     try {
       // Call  API provider to get city coordinates
@@ -66,12 +65,23 @@ class WeatherRepositoryImpl extends WeatherRepository {
         coords.lat,
         coords.lon,
       );
+      print(weatherData);
 
       final forecastEntity = ForecastDaysModel.fromJson(weatherData);
+      print('Forecast entity: $forecastEntity');
       return DataSuccess(forecastEntity);
     } catch (e, st) {
-      print('Error fetching forecast: $e\n$st');
-      return const DataFailed("Please check your connection...");
+      print('================================');
+      print('Forecast Exception');
+      print(e);
+      print(st);
+      print('================================');
+
+      return DataFailed(e.toString());
     }
+    // catch (e, st) {
+    //   print('Error fetching forecast: $e\n$st');
+    //   return const DataFailed("Please check your connection...");
+    // }
   }
 }

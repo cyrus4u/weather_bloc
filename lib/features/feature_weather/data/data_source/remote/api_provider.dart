@@ -52,6 +52,6 @@ class ApiProvider {
           'cnt': 6
         });
 
-    return response;
+    return response.data as Map<String, dynamic>; // <-- return the JSON map
   }
 }

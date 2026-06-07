@@ -22,7 +22,8 @@ class MainWrapper extends StatelessWidget {
       bottomNavigationBar: BottomNav(Controller: pageController),
       body: Container(
         decoration: BoxDecoration(
-          image: DecorationImage(
+          image: 
+          DecorationImage(
             image: AppBackground.getBackGroundImage(),
             fit: BoxFit.cover,
           ),

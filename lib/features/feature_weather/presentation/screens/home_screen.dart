@@ -4,6 +4,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:weather_bloc/core/widgets/app_background.dart';
 import 'package:weather_bloc/core/widgets/dot_loading_widget.dart';
 import 'package:weather_bloc/features/feature_weather/data/models/forecast_days_model.dart';
+import 'package:weather_bloc/features/feature_weather/data/models/forecast_item.dart';
 import 'package:weather_bloc/features/feature_weather/domain/entities/forecast_days_entity.dart';
 import 'package:weather_bloc/features/feature_weather/presentation/bloc/bloc/home_bloc.dart';
 import 'package:weather_bloc/features/feature_weather/presentation/widgets/day_weather_view.dart';
@@ -207,7 +208,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               padding: const EdgeInsets.only(left: 10.0),
                               child: Center(
                                 child: BlocBuilder<HomeBloc, HomeState>(
+                                  
                                   builder: (BuildContext context, state) {
+                                     
                                     /// show Loading State for Fw
                                     if (state is HomeLoading) {
                                       return const DotLoadingWidget();
@@ -225,10 +228,9 @@ class _HomeScreenState extends State<HomeScreen> {
                                           child: Text('Forecast not loaded'),
                                         );
                                       }
+                                      print('forecast = ${state.forecast}');
 
-                                      final List<Daily> mainDaily =
-                                          forecast.daily ?? [];
-
+                                      final List<ForecastItem> mainDaily = forecast.list ?? [];
                                       return ListView.builder(
                                         shrinkWrap: true,
                                         scrollDirection: Axis.horizontal,

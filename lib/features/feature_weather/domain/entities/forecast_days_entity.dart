@@ -1,38 +1,62 @@
 
 import 'package:equatable/equatable.dart';
-import 'package:weather_bloc/features/feature_weather/data/models/forecast_days_model.dart';
+import 'package:weather_bloc/features/feature_weather/data/models/forecast_item.dart';
 
-class ForecastDaysEntity extends Equatable{
+class ForecastDaysEntity extends Equatable {
   final double? lat;
   final double? lon;
-  final String? timezone;
   final int? timezoneOffset;
-  final Current? current;
-  final List<Daily>? daily;
-  final List<Alerts>? alerts;
+  final List<ForecastItem>? list; // renamed from daily
 
-  ForecastDaysEntity({
-      this.lat,
-      this.lon,
-      this.timezone,
-      this.timezoneOffset,
-      this.current,
-      this.daily,
-      this.alerts});
+  const ForecastDaysEntity({
+    this.lat,
+    this.lon,
+    this.timezoneOffset,
+    this.list,
+  });
 
   @override
-  // TODO: implement props
   List<Object?> get props => [
-  lat,
-  lon,
-  timezone,
-  timezoneOffset,
-  current,
-  daily,
-  alerts,
-  ];
+        lat,
+        lon,
+        timezoneOffset,
+        list,
+      ];
 
   @override
-  // TODO: implement stringify
+  bool? get stringify => true;
+}
+
+class ForecastItemEntity extends Equatable {
+  final DateTime? dt;
+  final double? temp;
+  final double? tempMin;
+  final double? tempMax;
+  final String? main;
+  final String? description;
+  final String? icon;
+
+  const ForecastItemEntity({
+    this.dt,
+    this.temp,
+    this.tempMin,
+    this.tempMax,
+    this.main,
+    this.description,
+    this.icon,
+  });
+
+  @override
+  List<Object?> get props => [
+        dt,
+        temp,
+        tempMin,
+        tempMax,
+        main,
+        description,
+        icon,
+      ];
+
+  @override
   bool? get stringify => true;
 }

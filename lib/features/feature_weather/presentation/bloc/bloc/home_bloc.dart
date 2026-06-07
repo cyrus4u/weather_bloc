@@ -33,17 +33,23 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
     });
 
     on<LoadFwEvent>((event, emit) async {
-      emit(HomeLoading());
+      print('FW Event Started');
+
+      // Call use case
       final dataState = await _getForecastWeatherUseCase(event.cityName);
+
+      print('FW Result: $dataState'); // Shows success or failure
 
       if (dataState is DataSuccess) {
         final currentState = state;
-        if (currentState is HomeCompleted) {
-          emit(currentState.copyWith(forecast: dataState.data!));
-        } else {
-          emit(HomeCompleted(forecast: dataState.data!));
-        }
+        emit(
+          currentState is HomeCompleted
+              ? currentState.copyWith(forecast: dataState.data!)
+              : HomeCompleted(forecast: dataState.data!),
+        );
+        print('Forecast successfully loaded: ${dataState.data}');
       } else if (dataState is DataFailed) {
+        print('Forecast Error: ${dataState.error}');
         emit(HomeError(dataState.error ?? "Unknown error"));
       }
     });
