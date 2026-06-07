@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:weather_bloc/core/params/forecast_params.dart';
 import 'package:weather_bloc/core/utils/constants.dart';
 
 class ApiProvider {
@@ -37,5 +38,20 @@ class ApiProvider {
     } catch (e) {
       rethrow;
     }
+  }
+   /// 5 days forecast api
+  Future<dynamic> sendRequest5DaysForcast(double lat, double lon) async {
+
+    var response = await _dio.get(
+        "${Constants.baseUrl}/data/2.5/forecast",
+        queryParameters: {
+          'lat': lat,
+          'lon': lon,
+          'appid': apiKey,
+          'units': 'metric',
+          'cnt': 6
+        });
+
+    return response;
   }
 }
