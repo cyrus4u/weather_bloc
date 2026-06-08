@@ -13,7 +13,7 @@ class MainWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> pageViewWidget = [ HomeScreen(), BookmarkScreen()];
+    List<Widget> pageViewWidget = [HomeScreen(), BookmarkScreen()];
 
     var height = MediaQuery.of(context).size.height;
 
@@ -22,8 +22,7 @@ class MainWrapper extends StatelessWidget {
       bottomNavigationBar: BottomNav(Controller: pageController),
       body: Container(
         decoration: BoxDecoration(
-          image: 
-          DecorationImage(
+          image: DecorationImage(
             image: AppBackground.getBackGroundImage(),
             fit: BoxFit.cover,
           ),

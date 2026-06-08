@@ -9,20 +9,22 @@ import 'package:weather_bloc/features/feature_weather/presentation/bloc/bloc/hom
 GetIt locator = GetIt.instance;
 
 setup() {
+  // 1. Register objects in setup
   locator.registerSingleton<ApiProvider>(ApiProvider());
 
-  // Repository
   locator.registerSingleton<WeatherRepository>(
-    WeatherRepositoryImpl(locator()),
+    WeatherRepositoryImpl(locator()), // injects ApiProvider
   );
 
-  // use case
   locator.registerSingleton<GetCurrentWeatherUsecase>(
-    GetCurrentWeatherUsecase(locator()),
+    GetCurrentWeatherUsecase(locator()), // injects WeatherRepository
   );
+
   locator.registerSingleton<GetForecastWeatherUseCase>(
-    GetForecastWeatherUseCase(locator()),
+    GetForecastWeatherUseCase(locator()), // injects WeatherRepository
   );
-  // Bloc
-  locator.registerSingleton<HomeBloc>(HomeBloc(locator(), locator()));
+
+  locator.registerSingleton<HomeBloc>(
+    HomeBloc(locator(), locator()), // injects both use cases
+  );
 }

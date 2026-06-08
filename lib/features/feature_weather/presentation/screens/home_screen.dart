@@ -5,9 +5,13 @@ import 'package:weather_bloc/core/widgets/app_background.dart';
 import 'package:weather_bloc/core/widgets/dot_loading_widget.dart';
 import 'package:weather_bloc/features/feature_weather/data/models/forecast_days_model.dart';
 import 'package:weather_bloc/features/feature_weather/data/models/forecast_item.dart';
+import 'package:weather_bloc/features/feature_weather/data/models/suggest_city_model.dart';
 import 'package:weather_bloc/features/feature_weather/domain/entities/forecast_days_entity.dart';
+import 'package:weather_bloc/features/feature_weather/domain/use_cases/get_suggestion_city_usecase.dart';
 import 'package:weather_bloc/features/feature_weather/presentation/bloc/bloc/home_bloc.dart';
 import 'package:weather_bloc/features/feature_weather/presentation/widgets/day_weather_view.dart';
+import 'package:weather_bloc/locator.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -17,15 +21,22 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  TextEditingController textEditingController = TextEditingController();
+  GetSuggestionCityUsecase getSuggestionCityUsecase = GetSuggestionCityUsecase(
+    locator(),
+  );
+
+  String cityName = 'Tehran';
   final PageController _pageController = PageController();
+
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    BlocProvider.of<HomeBloc>(context).add(const LoadCwEvent('Tehran'));
+    BlocProvider.of<HomeBloc>(context).add(LoadCwEvent(cityName));
 
     /// start load Fw event
-    BlocProvider.of<HomeBloc>(context).add(LoadFwEvent('Tehran'));
+    BlocProvider.of<HomeBloc>(context).add(LoadFwEvent(cityName));
   }
 
   @override
@@ -37,6 +48,51 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
+            SizedBox(height: height * .02),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: width * .03),
+              child: TypeAheadField<Data>(
+                builder: (context, controller, focusNode) {
+                  return TextField(
+                    controller: controller,
+                    focusNode: focusNode,
+                    style: const TextStyle(color: Colors.white),
+                    decoration: const InputDecoration(
+                      contentPadding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                      hintText: "Enter a City...",
+                      hintStyle: TextStyle(color: Colors.white),
+                      focusedBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                    ),
+                  );
+                },
+
+                suggestionsCallback: (String prefix) {
+                  return getSuggestionCityUsecase(prefix);
+                },
+
+                itemBuilder: (context, Data model) {
+                  return ListTile(
+                    leading: const Icon(Icons.location_on),
+                    title: Text(model.name!),
+                    subtitle: Text("${model.region!}, ${model.country!}"),
+                  );
+                },
+
+                onSelected: (Data model) {
+                  textEditingController.text = model.name!;
+
+                  context.read<HomeBloc>().add(LoadCwEvent(model.name!));
+
+                  context.read<HomeBloc>().add(LoadFwEvent(model.name!));
+                },
+              ),
+            ),
+            // main UI
             BlocBuilder<HomeBloc, HomeState>(
               builder: (context, state) {
                 if (state is HomeLoading) {
@@ -63,8 +119,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                       Padding(
                                         padding: EdgeInsets.only(top: 50),
                                         child: Text(
-                                          '${city!.name}',
-                                          style: TextStyle(
+                                          city?.name ?? 'City not loaded',
+                                          style: const TextStyle(
                                             color: Colors.white,
                                             fontSize: 30,
                                           ),
@@ -73,7 +129,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                       Padding(
                                         padding: EdgeInsets.only(top: 20),
                                         child: Text(
-                                          '${city.weather![0].description}',
+                                          '${city?.weather![0].description}',
                                           style: TextStyle(
                                             color: Colors.grey,
                                             fontSize: 20,
@@ -83,13 +139,13 @@ class _HomeScreenState extends State<HomeScreen> {
                                       Padding(
                                         padding: EdgeInsets.only(top: 20),
                                         child: AppBackground.setIconForMain(
-                                          '${city.weather![0].description}',
+                                          '${city?.weather![0].description}',
                                         ),
                                       ),
                                       Padding(
                                         padding: EdgeInsets.only(top: 50),
                                         child: Text(
-                                          '${city.main!.temp!.round()}°',
+                                          '${city?.main!.temp!.round()}°',
                                           style: TextStyle(
                                             color: Colors.white,
                                             fontSize: 50,
@@ -113,7 +169,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               ),
                                               SizedBox(height: 20),
                                               Text(
-                                                '${city.main!.tempMax!.round()}°',
+                                                '${city?.main!.tempMax!.round()}°',
                                                 style: TextStyle(
                                                   color: Colors.white,
                                                   fontSize: 16,
@@ -146,7 +202,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               ),
                                               SizedBox(height: 20),
                                               Text(
-                                                '${city.main!.tempMin!.round()}°',
+                                                '${city?.main!.tempMin!.round()}°',
                                                 style: TextStyle(
                                                   color: Colors.white,
                                                   fontSize: 16,
@@ -208,9 +264,7 @@ class _HomeScreenState extends State<HomeScreen> {
                               padding: const EdgeInsets.only(left: 10.0),
                               child: Center(
                                 child: BlocBuilder<HomeBloc, HomeState>(
-                                  
                                   builder: (BuildContext context, state) {
-                                     
                                     /// show Loading State for Fw
                                     if (state is HomeLoading) {
                                       return const DotLoadingWidget();
@@ -230,7 +284,8 @@ class _HomeScreenState extends State<HomeScreen> {
                                       }
                                       print('forecast = ${state.forecast}');
 
-                                      final List<ForecastItem> mainDaily = forecast.list ?? [];
+                                      final List<ForecastItem> mainDaily =
+                                          forecast.list ?? [];
                                       return ListView.builder(
                                         shrinkWrap: true,
                                         scrollDirection: Axis.horizontal,
