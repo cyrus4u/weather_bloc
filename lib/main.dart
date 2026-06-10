@@ -5,6 +5,7 @@ import 'package:weather_bloc/features/feature_weather/presentation/bloc/bloc/hom
 import 'package:weather_bloc/locator.dart';
 
 void main() async {
+   WidgetsFlutterBinding.ensureInitialized(); // ✅ Initialize Flutter bindings
   /// init locator
   await setup();
   runApp(

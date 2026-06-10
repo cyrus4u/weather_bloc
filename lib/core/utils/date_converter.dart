@@ -8,10 +8,12 @@ class DateConverter {
   }
 
   /// change DateTime to our dateFormat ---5:55 AM/PM--- for Example
-  static String changeDtToDateTimeHour(DateTime dt, int timeZoneInSeconds) {
-    final formatter = DateFormat.jm();
-    // adjust timezone by seconds
-    final adjusted = dt.add(Duration(seconds: timeZoneInSeconds));
-    return formatter.format(adjusted.toUtc()); // or just adjusted
+  static String changeDtToDateTimeHour(int timestamp, int timezoneInSeconds) {
+    final dateTime = DateTime.fromMillisecondsSinceEpoch(
+      timestamp * 1000,
+      isUtc: true,
+    );
+    final adjusted = dateTime.add(Duration(seconds: timezoneInSeconds));
+    return DateFormat.jm().format(adjusted); // outputs like 5:55 AM
   }
 }

@@ -14,42 +14,30 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final GetForecastWeatherUseCase _getForecastWeatherUseCase;
 
   HomeBloc(this._getCurrentWeatherUsecase, this._getForecastWeatherUseCase)
-    : super(HomeLoading()) {
+      : super(HomeLoading()) {
     on<LoadCwEvent>((event, emit) async {
-      emit(HomeLoading());
+      // Only show loading if nothing is loaded yet
+      if (state is! HomeCompleted) emit(HomeLoading());
+
       final dataState = await _getCurrentWeatherUsecase(event.cityName);
 
       if (dataState is DataSuccess) {
-        // preserve existing forecast if already loaded
-        final currentState = state;
-        if (currentState is HomeCompleted) {
-          emit(currentState.copyWith(city: dataState.data!));
-        } else {
-          emit(HomeCompleted(city: dataState.data!));
-        }
+        final currentForecast =
+            state is HomeCompleted ? (state as HomeCompleted).forecast : null;
+        emit(HomeCompleted(city: dataState.data, forecast: currentForecast));
       } else if (dataState is DataFailed) {
         emit(HomeError(dataState.error ?? "Unknown error"));
       }
     });
 
     on<LoadFwEvent>((event, emit) async {
-      print('FW Event Started');
-
-      // Call use case
       final dataState = await _getForecastWeatherUseCase(event.cityName);
 
-      print('FW Result: $dataState'); // Shows success or failure
-
       if (dataState is DataSuccess) {
-        final currentState = state;
-        emit(
-          currentState is HomeCompleted
-              ? currentState.copyWith(forecast: dataState.data!)
-              : HomeCompleted(forecast: dataState.data!),
-        );
-        print('Forecast successfully loaded: ${dataState.data}');
+        final currentCity =
+            state is HomeCompleted ? (state as HomeCompleted).city : null;
+        emit(HomeCompleted(city: currentCity, forecast: dataState.data));
       } else if (dataState is DataFailed) {
-        print('Forecast Error: ${dataState.error}');
         emit(HomeError(dataState.error ?? "Unknown error"));
       }
     });
