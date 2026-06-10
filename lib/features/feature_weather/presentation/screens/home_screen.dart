@@ -22,7 +22,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  TextEditingController textEditingController = TextEditingController();
+  late TextEditingController searchController;
   GetSuggestionCityUsecase getSuggestionCityUsecase = GetSuggestionCityUsecase(
     locator(),
   );
@@ -60,9 +60,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
                 child: TypeAheadField<Data>(
                   builder: (context, controller, focusNode) {
+                    searchController = controller;
                     return TextField(
                       controller: controller,
                       focusNode: focusNode,
+                      // maxLines: 2,
                       style: const TextStyle(color: Colors.white),
                       decoration: const InputDecoration(
                         contentPadding: EdgeInsets.fromLTRB(20, 0, 0, 0),
@@ -86,7 +88,11 @@ class _HomeScreenState extends State<HomeScreen> {
                     );
                   },
                   onSelected: (Data model) {
-                    textEditingController.text = model.name!;
+                    searchController.text = "${model.name}";
+
+                    searchController.selection = TextSelection.fromPosition(
+                      TextPosition(offset: searchController.text.length),
+                    );
                     context.read<HomeBloc>().add(LoadCwEvent(model.name!));
                     context.read<HomeBloc>().add(LoadFwEvent(model.name!));
                   },
@@ -214,12 +220,20 @@ class _HomeScreenState extends State<HomeScreen> {
                               ),
                             ),
                           ),
+                          // Divider
+                          Container(
+                            color: Colors.white24,
+                            height: 2,
+                            width: double.infinity,
+                          ),
                           Flexible(
                             flex: 3,
                             child:
                                 /// forecast weather 7 days
                                 Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 8.0),
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 8.0,
+                                  ),
                                   child: SizedBox(
                                     width: double.infinity,
                                     height: 100,
@@ -234,14 +248,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                             if (state is HomeLoading) {
                                               return const DotLoadingWidget();
                                             }
-                                  
+
                                             /// show Completed State for Fw
                                             if (state is HomeCompleted) {
                                               /// cast
-                                  
+
                                               final ForecastDaysEntity?
                                               forecast = state.forecast;
-                                  
+
                                               if (forecast == null) {
                                                 return const Center(
                                                   child: Text(
@@ -252,7 +266,7 @@ class _HomeScreenState extends State<HomeScreen> {
                                               print(
                                                 'forecast = ${state.forecast}',
                                               );
-                                  
+
                                               final List<ForecastItem>
                                               mainDaily = forecast.list ?? [];
                                               return ListView.builder(
@@ -271,14 +285,14 @@ class _HomeScreenState extends State<HomeScreen> {
                                                     },
                                               );
                                             }
-                                  
+
                                             /// show Error State for Fw
                                             if (state is HomeError) {
                                               return Center(
                                                 child: Text(state.message),
                                               );
                                             }
-                                  
+
                                             /// show Default State for Fw
                                             return Container();
                                           },
@@ -288,42 +302,91 @@ class _HomeScreenState extends State<HomeScreen> {
                                   ),
                                 ),
                           ),
+                          // Bottom divider
+                          Container(
+                            color: Colors.white24,
+                            height: 2,
+                            width: double.infinity,
+                          ),
 
                           // Bottom stats row (wind, sunrise, sunset, humidity)
-                          Flexible(
-                            flex: 1,
+                          Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 8),
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                               children: [
-                                _buildStatColumn(
-                                  'Wind',
-                                  '${city?.wind?.speed ?? 0} m/s',
-                                  height,
+                                _buildInfo(
+                                  title: "Wind",
+                                  value: "${city?.wind?.speed ?? 0} m/s",
+                                  height: height,
                                 ),
-                                _buildStatColumn(
-                                  'Sunrise',
-                                  DateConverter.changeDtToDateTimeHour(
+
+                                _divider(),
+
+                                _buildInfo(
+                                  title: "Sunrise",
+                                  value: DateConverter.changeDtToDateTimeHour(
                                     city?.sys?.sunrise ?? 0,
                                     city?.timezone ?? 0,
                                   ),
-                                  height,
+                                  height: height,
                                 ),
-                                _buildStatColumn(
-                                  'Sunset',
-                                  DateConverter.changeDtToDateTimeHour(
+
+                                _divider(),
+
+                                _buildInfo(
+                                  title: "Sunset",
+                                  value: DateConverter.changeDtToDateTimeHour(
                                     city?.sys?.sunset ?? 0,
                                     city?.timezone ?? 0,
                                   ),
-                                  height,
+                                  height: height,
                                 ),
-                                _buildStatColumn(
-                                  'Humidity',
-                                  '${city?.main?.humidity ?? 0}%',
-                                  height,
+
+                                _divider(),
+
+                                _buildInfo(
+                                  title: "Humidity",
+                                  value: "${city?.main?.humidity ?? 0}%",
+                                  height: height,
                                 ),
                               ],
                             ),
                           ),
+                          // Flexible(
+                          //   flex: 1,
+                          //   child: Row(
+                          //     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                          //     children: [
+                          //       _buildStatColumn(
+                          //         'Wind',
+                          //         '${city?.wind?.speed ?? 0} m/s',
+                          //         height,
+                          //       ),
+                          //       _buildStatColumn(
+                          //         'Sunrise',
+                          //         DateConverter.changeDtToDateTimeHour(
+                          //           city?.sys?.sunrise ?? 0,
+                          //           city?.timezone ?? 0,
+                          //         ),
+                          //         height,
+                          //       ),
+                          //       _buildStatColumn(
+                          //         'Sunset',
+                          //         DateConverter.changeDtToDateTimeHour(
+                          //           city?.sys?.sunset ?? 0,
+                          //           city?.timezone ?? 0,
+                          //         ),
+                          //         height,
+                          //       ),
+                          //       _buildStatColumn(
+                          //         'Humidity',
+                          //         '${city?.main?.humidity ?? 0}%',
+                          //         height,
+                          //       ),
+                          //     ],
+                          //   ),
+                          // ),
                         ],
                       );
                     } else if (state is HomeError) {
@@ -340,23 +403,48 @@ class _HomeScreenState extends State<HomeScreen> {
     );
   }
 
-  // helper function
-  Column _buildStatColumn(String label, String value, double height) {
+  Widget _buildInfo({
+    required String title,
+    required String value,
+    required double height,
+  }) {
     return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisSize: MainAxisSize.min,
       children: [
         Text(
-          label,
-          style: TextStyle(fontSize: height * 0.017, color: Colors.amber),
+          title,
+          style: TextStyle(fontSize: height * 0.014, color: Colors.amber),
         ),
-        SizedBox(height: 8),
+        const SizedBox(height: 6),
         Text(
           value,
-          style: TextStyle(fontSize: height * 0.016, color: Colors.white),
+          style: TextStyle(fontSize: height * 0.013, color: Colors.white),
         ),
       ],
     );
   }
+
+  Widget _divider() {
+    return Container(width: 1, height: 25, color: Colors.white24);
+  }
+
+  // // helper function
+  // Column _buildStatColumn(String label, String value, double height) {
+  //   return Column(
+  //     mainAxisAlignment: MainAxisAlignment.center,
+  //     children: [
+  //       Text(
+  //         label,
+  //         style: TextStyle(fontSize: height * 0.017, color: Colors.amber),
+  //       ),
+  //       SizedBox(height: 8),
+  //       Text(
+  //         value,
+  //         style: TextStyle(fontSize: height * 0.016, color: Colors.white),
+  //       ),
+  //     ],
+  //   );
+  // }
 
   // Widget build(BuildContext context) {
   //   final height = MediaQuery.of(context).size.height;

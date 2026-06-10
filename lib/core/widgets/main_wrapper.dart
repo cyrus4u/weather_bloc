@@ -19,6 +19,7 @@ class MainWrapper extends StatelessWidget {
 
     return Scaffold(
       extendBody: true,
+      resizeToAvoidBottomInset: false,
       bottomNavigationBar: BottomNav(Controller: pageController),
       body: Container(
         decoration: BoxDecoration(
