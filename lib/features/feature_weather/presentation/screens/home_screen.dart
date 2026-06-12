@@ -4,12 +4,14 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:weather_bloc/core/utils/date_converter.dart';
 import 'package:weather_bloc/core/widgets/app_background.dart';
 import 'package:weather_bloc/core/widgets/dot_loading_widget.dart';
+import 'package:weather_bloc/features/feature_bookmark/presentation/bloc/bloc/bookmark_bloc.dart';
 import 'package:weather_bloc/features/feature_weather/data/models/forecast_days_model.dart';
 import 'package:weather_bloc/features/feature_weather/data/models/forecast_item.dart';
 import 'package:weather_bloc/features/feature_weather/data/models/suggest_city_model.dart';
 import 'package:weather_bloc/features/feature_weather/domain/entities/forecast_days_entity.dart';
 import 'package:weather_bloc/features/feature_weather/domain/use_cases/get_suggestion_city_usecase.dart';
 import 'package:weather_bloc/features/feature_weather/presentation/bloc/bloc/home_bloc.dart';
+import 'package:weather_bloc/features/feature_weather/presentation/widgets/bookmark_icon.dart';
 import 'package:weather_bloc/features/feature_weather/presentation/widgets/day_weather_view.dart';
 import 'package:weather_bloc/locator.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
@@ -21,7 +23,8 @@ class HomeScreen extends StatefulWidget {
   State<HomeScreen> createState() => _HomeScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _HomeScreenState extends State<HomeScreen>
+    with AutomaticKeepAliveClientMixin {
   late TextEditingController searchController;
   GetSuggestionCityUsecase getSuggestionCityUsecase = GetSuggestionCityUsecase(
     locator(),
@@ -53,50 +56,104 @@ class _HomeScreenState extends State<HomeScreen> {
           return Column(
             children: [
               // City search
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: width * .03,
-                  vertical: 8,
-                ),
-                child: TypeAheadField<Data>(
-                  builder: (context, controller, focusNode) {
-                    searchController = controller;
-                    return TextField(
-                      controller: controller,
-                      focusNode: focusNode,
-                      // maxLines: 2,
-                      style: const TextStyle(color: Colors.white),
-                      decoration: const InputDecoration(
-                        contentPadding: EdgeInsets.fromLTRB(20, 0, 0, 0),
-                        hintText: "Enter a City...",
-                        hintStyle: TextStyle(color: Colors.white),
-                        focusedBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderSide: BorderSide(color: Colors.white),
-                        ),
+              Row(
+                children: [
+                  Expanded(
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: width * .03,
+                        vertical: 8,
                       ),
-                    );
-                  },
-                  suggestionsCallback: getSuggestionCityUsecase.call,
-                  itemBuilder: (context, Data model) {
-                    return ListTile(
-                      leading: const Icon(Icons.location_on),
-                      title: Text(model.name!),
-                      subtitle: Text("${model.region!}, ${model.country!}"),
-                    );
-                  },
-                  onSelected: (Data model) {
-                    searchController.text = "${model.name}";
+                      child: TypeAheadField<Data>(
+                        builder: (context, controller, focusNode) {
+                          searchController = controller;
+                          return TextField(
+                            controller: controller,
+                            focusNode: focusNode,
+                            // maxLines: 2,
+                            style: const TextStyle(color: Colors.white),
+                            decoration: const InputDecoration(
+                              contentPadding: EdgeInsets.fromLTRB(20, 0, 0, 0),
+                              hintText: "Enter a City...",
+                              hintStyle: TextStyle(color: Colors.white),
+                              focusedBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide(color: Colors.white),
+                              ),
+                            ),
+                          );
+                        },
+                        suggestionsCallback: getSuggestionCityUsecase.call,
+                        itemBuilder: (context, Data model) {
+                          return ListTile(
+                            leading: const Icon(Icons.location_on),
+                            title: Text(model.name!),
+                            subtitle: Text(
+                              "${model.region!}, ${model.country!}",
+                            ),
+                          );
+                        },
+                        onSelected: (Data model) {
+                          searchController.text = "${model.name}";
 
-                    searchController.selection = TextSelection.fromPosition(
-                      TextPosition(offset: searchController.text.length),
-                    );
-                    context.read<HomeBloc>().add(LoadCwEvent(model.name!));
-                    context.read<HomeBloc>().add(LoadFwEvent(model.name!));
-                  },
-                ),
+                          searchController
+                              .selection = TextSelection.fromPosition(
+                            TextPosition(offset: searchController.text.length),
+                          );
+                          context.read<HomeBloc>().add(
+                            LoadCwEvent(model.name!),
+                          );
+                          context.read<HomeBloc>().add(
+                            LoadFwEvent(model.name!),
+                          );
+                          context.read<BookmarkBloc>().add(
+                            GetCityByNameEvent(model.name!),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: 10),
+                  BlocBuilder<HomeBloc, HomeState>(
+                    buildWhen: (previous, current) {
+                      if (previous == current) {
+                        return false;
+                      }
+                      return true;
+                    },
+                    builder: (context, state) {
+                      /// show Loading State for Cw
+                      if (state is HomeLoading) {
+                        return const CircularProgressIndicator();
+                      }
+
+                      /// show Error State for Cw
+                      if (state is HomeError) {
+                        return IconButton(
+                          onPressed: () {
+                            // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            //   content: Text("please load a city!"),
+                            //   behavior: SnackBarBehavior.floating, // Add this line
+                            // ));
+                          },
+                          icon: const Icon(
+                            Icons.error,
+                            color: Colors.white,
+                            size: 35,
+                          ),
+                        );
+                      }
+
+                      if (state is HomeCompleted) {
+                        return BookMarkIcon(name: state.city?.name ?? "");
+                      }
+
+                      return Container();
+                    },
+                  ),
+                ],
               ),
 
               // Main weather UI
@@ -353,7 +410,6 @@ class _HomeScreenState extends State<HomeScreen> {
                               ],
                             ),
                           ),
-                          
                         ],
                       );
                     } else if (state is HomeError) {
@@ -395,4 +451,9 @@ class _HomeScreenState extends State<HomeScreen> {
     return Container(width: 1, height: 25, color: Colors.white24);
   }
 
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }
+
+

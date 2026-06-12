@@ -13,7 +13,10 @@ class MainWrapper extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    List<Widget> pageViewWidget = [HomeScreen(), BookmarkScreen()];
+    List<Widget> pageViewWidget = [
+      HomeScreen(),
+      BookmarkScreen(pageController: pageController),
+    ];
 
     var height = MediaQuery.of(context).size.height;
 
