@@ -14,6 +14,8 @@ class DateConverter {
       isUtc: true,
     );
     final adjusted = dateTime.add(Duration(seconds: timezoneInSeconds));
-    return DateFormat.jm().format(adjusted); // outputs like 5:55 AM
+    return DateFormat.jm()
+        .format(adjusted)
+        .replaceAll('\u202F', ' '); // outputs like 5:55 AM
   }
 }
