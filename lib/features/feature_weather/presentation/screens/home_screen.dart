@@ -5,7 +5,6 @@ import 'package:weather_bloc/core/utils/date_converter.dart';
 import 'package:weather_bloc/core/widgets/app_background.dart';
 import 'package:weather_bloc/core/widgets/dot_loading_widget.dart';
 import 'package:weather_bloc/features/feature_bookmark/presentation/bloc/bloc/bookmark_bloc.dart';
-import 'package:weather_bloc/features/feature_weather/data/models/forecast_days_model.dart';
 import 'package:weather_bloc/features/feature_weather/data/models/forecast_item.dart';
 import 'package:weather_bloc/features/feature_weather/data/models/suggest_city_model.dart';
 import 'package:weather_bloc/features/feature_weather/domain/entities/forecast_days_entity.dart';
@@ -43,7 +42,6 @@ class _HomeScreenState extends State<HomeScreen>
     BlocProvider.of<HomeBloc>(context).add(LoadFwEvent(cityName));
   }
 
-  @override
   @override
   Widget build(BuildContext context) {
     final height = MediaQuery.of(context).size.height;

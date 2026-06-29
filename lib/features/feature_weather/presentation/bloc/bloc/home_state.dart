@@ -38,22 +38,3 @@ final class HomeError extends HomeState {
   List<Object?> get props => [message];
 }
 
-/// Current Weather
-// final class HomeCompleted extends HomeState {
-//   final CurrentCityEntity city;
-
-//   const HomeCompleted(this.city);
-
-//   @override
-//   List<Object?> get props => [city];
-// }
-
-/// Forecast Weather
-// final class ForecastCompleted extends HomeState {
-//   final ForecastDaysEntity forecast;
-
-//   const ForecastCompleted(this.forecast);
-
-//   @override
-//   List<Object?> get props => [forecast];
-// }
