@@ -1,122 +1,149 @@
-# Weather Bloc App 🌤️
+# 🌤️ weather_bloc
 
-A modern weather application built with Flutter using BLoC and Clean Architecture.  
-The app provides real-time weather data, 5-day / 3-hour forecasts, and city management features using the OpenWeatherMap API.
-
----
-
-## 📱 Features
-
-- 🌍 Search weather by city name
-- 🌡️ Current weather conditions
-- 📅 5-day / 3-hour forecast
-- 💨 Wind speed, humidity, sunrise & sunset times
-- ⭐ Save favorite cities locally
-- ⚠️ Error handling UI for API/network failures
-- 🎨 Clean and responsive UI
+A Flutter weather app that lets you search for any city and view current conditions along with a 5-day / 3-hour forecast — built as a personal learning project to practice BLoC architecture, REST API integration, and local persistence.
 
 ---
 
-## 🧠 Architecture
+## 📸 Screenshots
 
-This project follows **Clean Architecture** with separation of concerns:
+| Main Screen | Saved Cities |
+|---|---|
+| ![Main Screen](images/mainScreen.jpg) | ![Saving Screen](images/savingScreen.jpg) |
 
-- **Presentation Layer**
-  - Flutter UI
-  - BLoC state management
+---
 
-- **Domain Layer**
-  - Use cases
-  - Entities
-  - Repository contracts
+## ✨ Features
 
-- **Data Layer**
-  - API services (Dio)
-  - Repository implementations
-  - Models (DTOs)
-
-This structure makes the project scalable, testable, and easy to maintain.
+- 🔍 **City search** with autocomplete suggestions powered by `flutter_typeahead`
+- 🌡️ **Current weather** — temperature, weather condition, wind speed, humidity, sunrise & sunset times
+- 📅 **5-Day / 3-Hour Forecast** — grouped forecast cards using the free OpenWeatherMap tier
+- 💾 **Save favourite cities** — persisted locally with Floor (SQLite)
+- 🎨 **Smooth UI** — loading animations and page indicators for a polished experience
 
 ---
 
 ## 🛠️ Tech Stack
 
-- Flutter
-- Dart
-- BLoC (State Management)
-- Dio (HTTP client)
-- Equatable
-- Clean Architecture
-- OpenWeatherMap API
+| Layer | Technology |
+|---|---|
+| State management | BLoC / flutter_bloc |
+| HTTP client | Dio |
+| Local database | Floor (SQLite) |
+| Dependency injection | GetIt |
+| Weather data | OpenWeatherMap API (free tier) |
+| Date formatting | intl |
+| Testing | mockito + bloc_test |
 
 ---
 
-## 📦 API
+## 📦 Dependencies
 
-This project uses the **OpenWeatherMap API**:
+```yaml
+dependencies:
+  dio: ^5.9.2
+  equatable: ^2.0.8
+  bloc: ^9.2.1
+  flutter_bloc: ^9.1.1
+  get_it: ^9.2.1
+  intl: ^0.20.2
+  loading_animation_widget: ^1.3.0
+  smooth_page_indicator: ^1.2.1
+  flutter_typeahead: ^6.0.0
+  floor: ^1.5.0
+  cupertino_icons: ^1.0.8
 
-- Current Weather API
-- 5 Day / 3 Hour Forecast API
+dev_dependencies:
+  floor_generator: ^1.5.0
+  build_runner: ^2.4.15
+  mockito: ^5.4.5
+  bloc_test: ^10.0.0
+```
 
-You need to add your API key in the project configuration.
+---
+
+## 🚀 Getting Started
+
+### Prerequisites
+
+- Flutter SDK `>=3.0.0`
+- A free [OpenWeatherMap](https://openweathermap.org/api) API key
+
+### Installation
+
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/cyrus4u/weather_bloc.git
+   cd weather_bloc
+   ```
+
+2. **Install dependencies**
+   ```bash
+   flutter pub get
+   ```
+
+3. **Generate Floor database code**
+   ```bash
+   dart run build_runner build --delete-conflicting-outputs
+   ```
+
+4. **Add your API key**
+
+   Create a file at `lib/core/constants/api_constants.dart` (or wherever your constants live) and add:
+   ```dart
+   const String openWeatherApiKey = 'YOUR_API_KEY_HERE';
+   ```
+   > ⚠️ Never commit your API key. Add the file to `.gitignore`.
+
+5. **Run the app**
+   ```bash
+   flutter run
+   ```
+
+---
+
+## 🧪 Testing
+
+This project uses `mockito` for mocking and `bloc_test` for testing BLoC logic.
+
+```bash
+flutter test
+```
+
+---
+
+## 📡 API Used
+
+[OpenWeatherMap — 5 Day / 3 Hour Forecast](https://openweathermap.org/forecast5)
+
+> The free tier provides forecasts in 3-hour intervals for up to 5 days. No credit card required.
 
 ---
 
 ## 📁 Project Structure
 
-```bash
+```
 lib/
- ├── data/
- │    ├── datasources/
- │    ├── models/
- │    └── repositories/
- │
- ├── domain/
- │    ├── entities/
- │    ├── repositories/
- │    └── usecases/
- │
- ├── presentation/
- │    ├── bloc/
- │    ├── pages/
- │    └── widgets/
- │
- └── main.dart
+├── core/               # Constants, DI setup, shared utilities
+├── data/               # Models, Floor entities, repositories
+├── domain/             # Use cases / business logic
+├── presentation/       # BLoC, pages, widgets
+└── main.dart
+```
 
-
-## 📸 Screenshots
-
-<p float="left">
-  <img src="./images/mainScreen.jpg" width="200"/>
-  <img src="./images/savingScreen.jpg" width="200"/>
-</p>
-⚙️ Setup Instructions
-Clone the repository
-git clone https://github.com/your-username/weather_bloc.git
-Install dependencies
-flutter pub get
-Add your OpenWeatherMap API key
-Create a .env file or configure inside constants
-Run the app
-flutter run
-🚀 Future Improvements
-Add location-based weather (GPS)
-Improve caching for offline mode
-Add animations for weather transitions
-Add unit tests for BLoC and use cases
-👨‍💻 Author
-
-Built by Cyrus
-Feel free to explore, fork, and improve 🚀
-
+> _Adjust this tree to match your actual folder structure._
 
 ---
 
-## If you want to improve it further
-I can next level this README with:
-- GitHub badges (Flutter version, BLoC, license, etc.)
-- GIF preview instead of screenshots
-- better “professional portfolio style” layout
-- or make it look like a **top open-source project**
+## 🎯 What I Learned
 
-Just tell me 👍
+- Implementing clean BLoC architecture with state, event, and cubit separation
+- Consuming a REST API with Dio and mapping JSON responses to Dart models
+- Setting up Floor for local SQLite persistence with code generation
+- Writing unit tests for BLoC logic using `bloc_test` and `mockito`
+- Managing dependency injection with GetIt
+
+---
+
+## 📄 License
+
+This project is for learning purposes and is not licensed for production use.
