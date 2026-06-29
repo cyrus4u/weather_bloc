@@ -82,11 +82,14 @@ lib/
  │    └── widgets/
  │
  └── main.dart
- 📸 Screenshots
 
 
+## 📸 Screenshots
 
-<p float="left"> <img src="images/mainScreen.jpg" width="200"/> <img src="images/savingScreen.jpg" width="200"/> </p>
+<p float="left">
+  <img src="images/mainScreen.jpg" width="200"/>
+  <img src="images/savingScreen.jpg" width="200"/>
+</p>
 ⚙️ Setup Instructions
 Clone the repository
 git clone https://github.com/your-username/weather_bloc.git
