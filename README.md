@@ -87,8 +87,8 @@ lib/
 ## 📸 Screenshots
 
 <p float="left">
-  <img src="images/mainScreen.jpg" width="200"/>
-  <img src="images/savingScreen.jpg" width="200"/>
+  <img src="./images/mainScreen.jpg" width="200"/>
+  <img src="./images/savingScreen.jpg" width="200"/>
 </p>
 ⚙️ Setup Instructions
 Clone the repository
