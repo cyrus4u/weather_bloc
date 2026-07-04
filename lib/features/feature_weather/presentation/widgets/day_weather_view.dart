@@ -5,8 +5,8 @@ import 'package:weather_bloc/features/feature_weather/data/models/forecast_days_
 import 'package:weather_bloc/features/feature_weather/data/models/forecast_item.dart';
 
 class DaysWeatherView extends StatefulWidget {
-   final ForecastItem daily; // add this
-  const DaysWeatherView({super.key,required this.daily});
+  final ForecastItem daily; // add this
+  const DaysWeatherView({super.key, required this.daily});
 
   @override
   State<DaysWeatherView> createState() => _DaysWeatherViewState();
@@ -53,32 +53,22 @@ class _DaysWeatherViewState extends State<DaysWeatherView>
             child: Card(
               color: Colors.transparent,
               elevation: 0,
-              child: SizedBox(
-                width: 50,
-                height: 50,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
                 child: Column(
+                  mainAxisSize: MainAxisSize
+                      .min, // ✅ column takes only the space it needs
                   children: [
                     Text(
                       DateConverter.changeDtToDateTime(widget.daily.dt),
                       style: const TextStyle(fontSize: 12, color: Colors.grey),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(top: 5.0),
-                      child: AppBackground.setIconForMain(
-                        widget.daily.description,
-                      ),
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: const EdgeInsets.only(top: 5.0),
-                        child: Text(
-                          "${widget.daily.temp.round()}\u00B0",
-                          style: const TextStyle(
-                            fontSize: 15,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
+                    const SizedBox(height: 5),
+                    AppBackground.setIconForMain(widget.daily.description),
+                    const SizedBox(height: 5),
+                    Text(
+                      "${widget.daily.temp.round()}\u00B0",
+                      style: const TextStyle(fontSize: 15, color: Colors.white),
                     ),
                   ],
                 ),

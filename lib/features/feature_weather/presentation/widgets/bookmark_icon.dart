@@ -30,6 +30,9 @@ class BookMarkIcon extends StatelessWidget {
 
           // ✅ re-check DB so isSaved updates and star fills immediately
           context.read<BookmarkBloc>().add(GetCityByNameEvent(name));
+          context.read<BookmarkBloc>().add(
+            SaveCityInitialEvent(),
+          ); // ✅ don't forget this
         }
 
         if (state.saveCityStatus is SaveCityError) {
