@@ -29,10 +29,12 @@ class BookMarkIcon extends StatelessWidget {
           );
 
           // ✅ re-check DB so isSaved updates and star fills immediately
+          // After saving successfully, ask the DB again:
+          // "Hey, is this city saved now?" → updates getCityStatus → star fills ⭐
           context.read<BookmarkBloc>().add(GetCityByNameEvent(name));
-          context.read<BookmarkBloc>().add(
-            SaveCityInitialEvent(),
-          ); // ✅ don't forget this
+          // Reset saveCityStatus back to its original state
+          // so the snackbar doesn't show again next time anything changes
+          context.read<BookmarkBloc>().add(SaveCityInitialEvent());
         }
 
         if (state.saveCityStatus is SaveCityError) {
