@@ -13,6 +13,13 @@ class BookMarkIcon extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<BookmarkBloc, BookmarkState>(
+      listenWhen: (previous, current) =>
+          previous.saveCityStatus != current.saveCityStatus,
+
+      buildWhen: (previous, current) =>
+          previous.getCityStatus != current.getCityStatus ||
+          previous.saveCityStatus != current.saveCityStatus,
+
       listener: (context, state) {
         if (state.saveCityStatus is SaveCityCompleted) {
           final data = state.saveCityStatus as SaveCityCompleted;
@@ -20,6 +27,9 @@ class BookMarkIcon extends StatelessWidget {
           ScaffoldMessenger.of(context).showSnackBar(
             SnackBar(content: Text("${data.city.name} Added to Bookmark")),
           );
+
+          // ✅ re-check DB so isSaved updates and star fills immediately
+          context.read<BookmarkBloc>().add(GetCityByNameEvent(name));
         }
 
         if (state.saveCityStatus is SaveCityError) {
@@ -30,7 +40,6 @@ class BookMarkIcon extends StatelessWidget {
           ).showSnackBar(SnackBar(content: Text(error.message ?? "")));
         }
       },
-
       builder: (context, state) {
         if (state.saveCityStatus is SaveCityLoading) {
           return const CircularProgressIndicator();
@@ -60,4 +69,3 @@ class BookMarkIcon extends StatelessWidget {
     );
   }
 }
-
