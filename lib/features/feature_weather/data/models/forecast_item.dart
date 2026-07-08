@@ -1,28 +1,22 @@
-class ForecastItem {
-  final DateTime dt;
-  final double temp;
-  final double tempMin;
-  final double tempMax;
-  final String main;
-  final String description;
-  final String icon;
+import 'package:weather_bloc/features/feature_weather/domain/entities/forecast_days_entity.dart';
 
-  ForecastItem({
-    required this.dt,
-    required this.temp,
-    required this.tempMin,
-    required this.tempMax,
-    required this.main,
-    required this.description,
-    required this.icon,
+class ForecastItemModel extends ForecastItemEntity {
+  const ForecastItemModel({
+    required DateTime super.dt,
+    required double super.temp,
+    required double super.tempMin,
+    required double super.tempMax,
+    required String super.main,
+    required String super.description,
+    required String super.icon,
   });
 
-  factory ForecastItem.fromJson(Map<String, dynamic> json) {
+  factory ForecastItemModel.fromJson(Map<String, dynamic> json) {
     final mainData = json['main'] ?? {};
     final weatherList = json['weather'] as List<dynamic>? ?? [];
     final weather = weatherList.isNotEmpty ? weatherList[0] : {};
 
-    return ForecastItem(
+    return ForecastItemModel(
       dt: DateTime.fromMillisecondsSinceEpoch((json['dt'] as int) * 1000),
       temp: (mainData['temp'] as num?)?.toDouble() ?? 0.0,
       tempMin: (mainData['temp_min'] as num?)?.toDouble() ?? 0.0,

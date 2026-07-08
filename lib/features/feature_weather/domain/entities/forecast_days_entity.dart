@@ -1,12 +1,10 @@
-
 import 'package:equatable/equatable.dart';
-import 'package:weather_bloc/features/feature_weather/data/models/forecast_item.dart';
 
 class ForecastDaysEntity extends Equatable {
   final double? lat;
   final double? lon;
   final int? timezoneOffset;
-  final List<ForecastItem>? list; // renamed from daily
+  final List<ForecastItemEntity>? list;
 
   const ForecastDaysEntity({
     this.lat,
@@ -16,12 +14,7 @@ class ForecastDaysEntity extends Equatable {
   });
 
   @override
-  List<Object?> get props => [
-        lat,
-        lon,
-        timezoneOffset,
-        list,
-      ];
+  List<Object?> get props => [lat, lon, timezoneOffset, list];
 
   @override
   bool? get stringify => true;
@@ -47,15 +40,7 @@ class ForecastItemEntity extends Equatable {
   });
 
   @override
-  List<Object?> get props => [
-        dt,
-        temp,
-        tempMin,
-        tempMax,
-        main,
-        description,
-        icon,
-      ];
+  List<Object?> get props => [dt, temp, tempMin, tempMax, main, description, icon];
 
   @override
   bool? get stringify => true;

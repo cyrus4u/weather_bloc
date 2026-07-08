@@ -1,4 +1,4 @@
-import '../../domain/entities/suggest_city_entity.dart';
+import 'package:weather_bloc/features/feature_weather/domain/entities/suggest_city_entity.dart';
 
 /// data : [{"id":58764,"wikiDataId":"Q605157","type":"CITY","city":"Babol","name":"Babol","country":"Iran","countryCode":"IR","region":"Mazandaran","regionCode":"21","latitude":36.55,"longitude":52.683333333,"population":250217}]
 /// metadata : {"currentOffset":0,"totalCount":1}
@@ -7,18 +7,17 @@ class SuggestCityModel extends SuggestCityEntity {
   const SuggestCityModel({super.data, super.metadata});
 
   factory SuggestCityModel.fromJson(dynamic json) {
-    /// parse json to object
-    List<Data> data = [];
+    List<DataModel> data = [];
     if (json['data'] != null) {
       json['data'].forEach((v) {
-        data.add(Data.fromJson(v));
+        data.add(DataModel.fromJson(v));
       });
     }
 
     return SuggestCityModel(
       data: data,
       metadata: json['metadata'] != null
-          ? Metadata.fromJson(json['metadata'])
+          ? MetadataModel.fromJson(json['metadata'])
           : null,
     );
   }
@@ -27,27 +26,21 @@ class SuggestCityModel extends SuggestCityEntity {
 /// currentOffset : 0
 /// totalCount : 1
 
-class Metadata {
-  Metadata({int? currentOffset, int? totalCount}) {
-    _currentOffset = currentOffset;
-    _totalCount = totalCount;
-  }
+class MetadataModel extends MetadataEntity {
+  const MetadataModel({super.currentOffset, super.totalCount});
 
-  Metadata.fromJson(dynamic json) {
-    _currentOffset = json['currentOffset'];
-    _totalCount = json['totalCount'];
+  factory MetadataModel.fromJson(dynamic json) {
+    return MetadataModel(
+      currentOffset: json['currentOffset'],
+      totalCount: json['totalCount'],
+    );
   }
-  int? _currentOffset;
-  int? _totalCount;
-
-  int? get currentOffset => _currentOffset;
-  int? get totalCount => _totalCount;
 
   Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    map['currentOffset'] = _currentOffset;
-    map['totalCount'] = _totalCount;
-    return map;
+    return {
+      'currentOffset': currentOffset,
+      'totalCount': totalCount,
+    };
   }
 }
 
@@ -64,89 +57,53 @@ class Metadata {
 /// longitude : 52.683333333
 /// population : 250217
 
-class Data {
-  Data({
-    int? id,
-    String? wikiDataId,
-    String? type,
-    String? city,
-    String? name,
-    String? country,
-    String? countryCode,
-    String? region,
-    String? regionCode,
-    double? latitude,
-    double? longitude,
-    int? population,
-  }) {
-    _id = id;
-    _wikiDataId = wikiDataId;
-    _type = type;
-    _city = city;
-    _name = name;
-    _country = country;
-    _countryCode = countryCode;
-    _region = region;
-    _regionCode = regionCode;
-    _latitude = latitude;
-    _longitude = longitude;
-    _population = population;
-  }
+class DataModel extends DataEntity {
+  const DataModel({
+    super.id,
+    super.wikiDataId,
+    super.type,
+    super.city,
+    super.name,
+    super.country,
+    super.countryCode,
+    super.region,
+    super.regionCode,
+    super.latitude,
+    super.longitude,
+    super.population,
+  });
 
-  Data.fromJson(dynamic json) {
-    _id = json['id'];
-    _wikiDataId = json['wikiDataId'];
-    _type = json['type'];
-    _city = json['city'];
-    _name = json['name'];
-    _country = json['country'];
-    _countryCode = json['countryCode'];
-    _region = json['region'];
-    _regionCode = json['regionCode'];
-    _latitude = json['latitude'];
-    _longitude = json['longitude'];
-    _population = json['population'];
+  factory DataModel.fromJson(dynamic json) {
+    return DataModel(
+      id: json['id'],
+      wikiDataId: json['wikiDataId'],
+      type: json['type'],
+      city: json['city'],
+      name: json['name'],
+      country: json['country'],
+      countryCode: json['countryCode'],
+      region: json['region'],
+      regionCode: json['regionCode'],
+      latitude: (json['latitude'] as num?)?.toDouble(),
+      longitude: (json['longitude'] as num?)?.toDouble(),
+      population: json['population'],
+    );
   }
-  int? _id;
-  String? _wikiDataId;
-  String? _type;
-  String? _city;
-  String? _name;
-  String? _country;
-  String? _countryCode;
-  String? _region;
-  String? _regionCode;
-  double? _latitude;
-  double? _longitude;
-  int? _population;
-
-  int? get id => _id;
-  String? get wikiDataId => _wikiDataId;
-  String? get type => _type;
-  String? get city => _city;
-  String? get name => _name;
-  String? get country => _country;
-  String? get countryCode => _countryCode;
-  String? get region => _region;
-  String? get regionCode => _regionCode;
-  double? get latitude => _latitude;
-  double? get longitude => _longitude;
-  int? get population => _population;
 
   Map<String, dynamic> toJson() {
-    final map = <String, dynamic>{};
-    map['id'] = _id;
-    map['wikiDataId'] = _wikiDataId;
-    map['type'] = _type;
-    map['city'] = _city;
-    map['name'] = _name;
-    map['country'] = _country;
-    map['countryCode'] = _countryCode;
-    map['region'] = _region;
-    map['regionCode'] = _regionCode;
-    map['latitude'] = _latitude;
-    map['longitude'] = _longitude;
-    map['population'] = _population;
-    return map;
+    return {
+      'id': id,
+      'wikiDataId': wikiDataId,
+      'type': type,
+      'city': city,
+      'name': name,
+      'country': country,
+      'countryCode': countryCode,
+      'region': region,
+      'regionCode': regionCode,
+      'latitude': latitude,
+      'longitude': longitude,
+      'population': population,
+    };
   }
 }

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:weather_bloc/core/utils/date_converter.dart';
 import 'package:weather_bloc/core/widgets/app_background.dart';
-import 'package:weather_bloc/features/feature_weather/data/models/forecast_days_model.dart';
-import 'package:weather_bloc/features/feature_weather/data/models/forecast_item.dart';
+import 'package:weather_bloc/features/feature_weather/domain/entities/forecast_days_entity.dart';
 
 class DaysWeatherView extends StatefulWidget {
-  final ForecastItem daily; // add this
+  final ForecastItemEntity daily;
   const DaysWeatherView({super.key, required this.daily});
 
   @override
@@ -19,7 +18,6 @@ class _DaysWeatherViewState extends State<DaysWeatherView>
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     animationController = AnimationController(
@@ -56,18 +54,19 @@ class _DaysWeatherViewState extends State<DaysWeatherView>
               child: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 4),
                 child: Column(
-                  mainAxisSize: MainAxisSize
-                      .min, // ✅ column takes only the space it needs
+                  mainAxisSize: MainAxisSize.min,
                   children: [
                     Text(
-                      DateConverter.changeDtToDateTime(widget.daily.dt),
+                      widget.daily.dt != null
+                          ? DateConverter.changeDtToDateTime(widget.daily.dt!)
+                          : '--',
                       style: const TextStyle(fontSize: 12, color: Colors.grey),
                     ),
                     const SizedBox(height: 5),
-                    AppBackground.setIconForMain(widget.daily.description),
+                    AppBackground.setIconForMain(widget.daily.description ?? ''),
                     const SizedBox(height: 5),
                     Text(
-                      "${widget.daily.temp.round()}\u00B0",
+                      "${widget.daily.temp?.round() ?? 0}\u00B0",
                       style: const TextStyle(fontSize: 15, color: Colors.white),
                     ),
                   ],
@@ -82,10 +81,7 @@ class _DaysWeatherViewState extends State<DaysWeatherView>
 
   @override
   void dispose() {
-    // TODO: implement dispose
     animationController.dispose();
-    // _fwBloc.dispose();
-    // _cwBloc.dispose();
     super.dispose();
   }
 }

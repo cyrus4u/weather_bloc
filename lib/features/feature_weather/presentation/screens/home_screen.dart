@@ -5,9 +5,8 @@ import 'package:weather_bloc/core/utils/date_converter.dart';
 import 'package:weather_bloc/core/widgets/app_background.dart';
 import 'package:weather_bloc/core/widgets/dot_loading_widget.dart';
 import 'package:weather_bloc/features/feature_bookmark/presentation/bloc/bloc/bookmark_bloc.dart';
-import 'package:weather_bloc/features/feature_weather/data/models/forecast_item.dart';
-import 'package:weather_bloc/features/feature_weather/data/models/suggest_city_model.dart';
 import 'package:weather_bloc/features/feature_weather/domain/entities/forecast_days_entity.dart';
+import 'package:weather_bloc/features/feature_weather/domain/entities/suggest_city_entity.dart';
 import 'package:weather_bloc/features/feature_weather/domain/use_cases/get_suggestion_city_usecase.dart';
 import 'package:weather_bloc/features/feature_weather/presentation/bloc/bloc/home_bloc.dart';
 import 'package:weather_bloc/features/feature_weather/presentation/widgets/bookmark_icon.dart';
@@ -62,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen>
                         horizontal: width * .03,
                         vertical: 8,
                       ),
-                      child: TypeAheadField<Data>(
+                      child: TypeAheadField<DataEntity>(
                         builder: (context, controller, focusNode) {
                           searchController = controller;
                           return TextField(
@@ -84,7 +83,7 @@ class _HomeScreenState extends State<HomeScreen>
                           );
                         },
                         suggestionsCallback: getSuggestionCityUsecase.call,
-                        itemBuilder: (context, Data model) {
+                        itemBuilder: (context, DataEntity model) {
                           return ListTile(
                             leading: const Icon(Icons.location_on),
                             title: Text(model.name!),
@@ -93,7 +92,7 @@ class _HomeScreenState extends State<HomeScreen>
                             ),
                           );
                         },
-                        onSelected: (Data model) {
+                        onSelected: (DataEntity model) {
                           searchController.text = "${model.name}";
 
                           searchController
@@ -322,7 +321,7 @@ class _HomeScreenState extends State<HomeScreen>
                                                 'forecast = ${state.forecast}',
                                               );
 
-                                              final List<ForecastItem>
+                                              final List<ForecastItemEntity>
                                               mainDaily = forecast.list ?? [];
                                               return ListView.builder(
                                                 shrinkWrap: true,
