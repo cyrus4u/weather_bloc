@@ -11,11 +11,11 @@ import 'package:weather_bloc/features/feature_weather/domain/use_cases/get_sugge
 import 'package:weather_bloc/features/feature_weather/presentation/bloc/bloc/home_bloc.dart';
 import 'package:weather_bloc/features/feature_weather/presentation/widgets/bookmark_icon.dart';
 import 'package:weather_bloc/features/feature_weather/presentation/widgets/day_weather_view.dart';
-import 'package:weather_bloc/locator.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 
 class HomeScreen extends StatefulWidget {
-  const HomeScreen({super.key});
+  final GetSuggestionCityUsecase getSuggestionCityUsecase;
+  const HomeScreen({super.key, required this.getSuggestionCityUsecase});
 
   @override
   State<HomeScreen> createState() => _HomeScreenState();
@@ -24,9 +24,6 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen>
     with AutomaticKeepAliveClientMixin {
   late TextEditingController searchController;
-  GetSuggestionCityUsecase getSuggestionCityUsecase = GetSuggestionCityUsecase(
-    locator(),
-  );
 
   String cityName = 'Tehran';
   final PageController _pageController = PageController();
@@ -82,7 +79,8 @@ class _HomeScreenState extends State<HomeScreen>
                             ),
                           );
                         },
-                        suggestionsCallback: getSuggestionCityUsecase.call,
+                        suggestionsCallback:
+                            widget.getSuggestionCityUsecase.call,
                         itemBuilder: (context, DataEntity model) {
                           return ListTile(
                             leading: const Icon(Icons.location_on),
@@ -452,5 +450,3 @@ class _HomeScreenState extends State<HomeScreen>
   // TODO: implement wantKeepAlive
   bool get wantKeepAlive => true;
 }
-
-

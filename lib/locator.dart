@@ -12,6 +12,7 @@ import 'package:weather_bloc/features/feature_weather/data/repository/weather_re
 import 'package:weather_bloc/features/feature_weather/domain/repository/weather_repository.dart';
 import 'package:weather_bloc/features/feature_weather/domain/use_cases/get_current_weather_usecase.dart';
 import 'package:weather_bloc/features/feature_weather/domain/use_cases/get_forecast_weather_usecase.dart';
+import 'package:weather_bloc/features/feature_weather/domain/use_cases/get_suggestion_city_usecase.dart';
 import 'package:weather_bloc/features/feature_weather/presentation/bloc/bloc/home_bloc.dart';
 
 GetIt locator = GetIt.instance;
@@ -29,6 +30,7 @@ setup() async {
   /// use case
   locator.registerSingleton<GetCurrentWeatherUsecase>(GetCurrentWeatherUsecase(locator()));
   locator.registerSingleton<GetForecastWeatherUseCase>(GetForecastWeatherUseCase(locator()));
+  locator.registerSingleton<GetSuggestionCityUsecase>(GetSuggestionCityUsecase(locator()));
   locator.registerSingleton<GetCityUseCase>(GetCityUseCase(locator()));
   locator.registerSingleton<SaveCityUseCase>(SaveCityUseCase(locator()));
   locator.registerSingleton<GetAllCityUseCase>(GetAllCityUseCase(locator()));

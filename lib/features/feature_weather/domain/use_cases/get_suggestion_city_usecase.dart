@@ -1,5 +1,4 @@
 import 'package:weather_bloc/core/usecase/use_case.dart';
-import 'package:weather_bloc/features/feature_weather/data/models/suggest_city_model.dart';
 import 'package:weather_bloc/features/feature_weather/domain/entities/suggest_city_entity.dart';
 import 'package:weather_bloc/features/feature_weather/domain/repository/weather_repository.dart';
 
