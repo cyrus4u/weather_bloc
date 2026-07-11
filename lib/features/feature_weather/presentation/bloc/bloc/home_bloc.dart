@@ -14,29 +14,28 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
   final GetForecastWeatherUseCase _getForecastWeatherUseCase;
 
   HomeBloc(this._getCurrentWeatherUsecase, this._getForecastWeatherUseCase)
-      : super(HomeLoading()) {
+    : super(HomeLoading()) {
     on<LoadCwEvent>((event, emit) async {
-      // Only show loading if nothing is loaded yet
       if (state is! HomeCompleted) emit(HomeLoading());
-
       final dataState = await _getCurrentWeatherUsecase(event.cityName);
-
       if (dataState is DataSuccess) {
-        final currentForecast =
-            state is HomeCompleted ? (state as HomeCompleted).forecast : null;
-        emit(HomeCompleted(city: dataState.data, forecast: currentForecast));
+        final current = state is HomeCompleted
+            ? state as HomeCompleted
+            : const HomeCompleted();
+        emit(current.copyWith(city: dataState.data));
       } else if (dataState is DataFailed) {
         emit(HomeError(dataState.error ?? "Unknown error"));
       }
     });
 
     on<LoadFwEvent>((event, emit) async {
+      if (state is! HomeCompleted) emit(HomeLoading());
       final dataState = await _getForecastWeatherUseCase(event.cityName);
-
       if (dataState is DataSuccess) {
-        final currentCity =
-            state is HomeCompleted ? (state as HomeCompleted).city : null;
-        emit(HomeCompleted(city: currentCity, forecast: dataState.data));
+        final current = state is HomeCompleted
+            ? state as HomeCompleted
+            : const HomeCompleted();
+        emit(current.copyWith(forecast: dataState.data));
       } else if (dataState is DataFailed) {
         emit(HomeError(dataState.error ?? "Unknown error"));
       }
