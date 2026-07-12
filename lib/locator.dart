@@ -18,14 +18,18 @@ import 'package:weather_bloc/features/feature_weather/presentation/bloc/bloc/hom
 GetIt locator = GetIt.instance;
 
 setup() async {
+  // 1. Runs FIRST — ApiProvider is built and stored
   locator.registerSingleton<ApiProvider>(ApiProvider());
-
+  // 2. Runs SECOND — database built and stored
   final database = await $FloorAppDatabase
       .databaseBuilder('app_database.db')
       .build();
   locator.registerSingleton<AppDatabase>(database);
 
   /// repositories
+  /// 3. Runs THIRD — WeatherRepositoryImpl needs ApiProvider,
+  //    so locator() reaches back and grabs the ALREADY-BUILT
+  //    ApiProvider from step 1
   locator.registerSingleton<WeatherRepository>(
     WeatherRepositoryImpl(locator()),
   );
@@ -34,6 +38,8 @@ setup() async {
   );
 
   /// use case
+  /// 4. Runs FOURTH — GetCurrentWeatherUsecase needs WeatherRepository,
+  //    grabs the ALREADY-BUILT one from step 3
   locator.registerSingleton<GetCurrentWeatherUsecase>(
     GetCurrentWeatherUsecase(locator()),
   );
@@ -49,6 +55,8 @@ setup() async {
   locator.registerSingleton<DeleteCityUseCase>(DeleteCityUseCase(locator()));
 
   /// BLOC
+  ///  LAST — HomeBloc needs both usecases, grabs the
+  // ALREADY-BUILT ones from step 4
   locator.registerSingleton<HomeBloc>(
     HomeBloc(
       getCurrentWeatherUsecase: locator(),

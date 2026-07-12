@@ -14,6 +14,10 @@ void main() async {
       debugShowCheckedModeBanner: false,
       home: MultiBlocProvider(
         providers: [
+          ///This just says: "go into get_it's internal storage box,
+          /// find the HomeBloc instance that was built during setup(),
+          ///  and hand me that exact same object." No building happens here 
+          /// — it's a lookup, not a construction trigger.
           BlocProvider(create: (context) => locator<HomeBloc>()),
           BlocProvider(create: (context) => locator<BookmarkBloc>()),
         ],
