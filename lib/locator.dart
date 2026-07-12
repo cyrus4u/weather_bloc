@@ -20,24 +20,47 @@ GetIt locator = GetIt.instance;
 setup() async {
   locator.registerSingleton<ApiProvider>(ApiProvider());
 
-  final database = await $FloorAppDatabase.databaseBuilder('app_database.db').build();
+  final database = await $FloorAppDatabase
+      .databaseBuilder('app_database.db')
+      .build();
   locator.registerSingleton<AppDatabase>(database);
 
   /// repositories
-  locator.registerSingleton<WeatherRepository>(WeatherRepositoryImpl(locator()));
-  locator.registerSingleton<CityRepository>(CityRepositoryImpl(database.cityDao));
+  locator.registerSingleton<WeatherRepository>(
+    WeatherRepositoryImpl(locator()),
+  );
+  locator.registerSingleton<CityRepository>(
+    CityRepositoryImpl(database.cityDao),
+  );
 
   /// use case
-  locator.registerSingleton<GetCurrentWeatherUsecase>(GetCurrentWeatherUsecase(locator()));
-  locator.registerSingleton<GetForecastWeatherUseCase>(GetForecastWeatherUseCase(locator()));
-  locator.registerSingleton<GetSuggestionCityUsecase>(GetSuggestionCityUsecase(locator()));
+  locator.registerSingleton<GetCurrentWeatherUsecase>(
+    GetCurrentWeatherUsecase(locator()),
+  );
+  locator.registerSingleton<GetForecastWeatherUseCase>(
+    GetForecastWeatherUseCase(locator()),
+  );
+  locator.registerSingleton<GetSuggestionCityUsecase>(
+    GetSuggestionCityUsecase(locator()),
+  );
   locator.registerSingleton<GetCityUseCase>(GetCityUseCase(locator()));
   locator.registerSingleton<SaveCityUseCase>(SaveCityUseCase(locator()));
   locator.registerSingleton<GetAllCityUseCase>(GetAllCityUseCase(locator()));
   locator.registerSingleton<DeleteCityUseCase>(DeleteCityUseCase(locator()));
 
-
-
-  locator.registerSingleton<HomeBloc>(HomeBloc(locator(),locator()));
-  locator.registerSingleton<BookmarkBloc>(BookmarkBloc(locator(),locator(),locator(),locator()));
+  /// BLOC
+  locator.registerSingleton<HomeBloc>(
+    HomeBloc(
+      getCurrentWeatherUsecase: locator(),
+      getForecastWeatherUseCase: locator(),
+    ),
+  );
+  locator.registerSingleton<BookmarkBloc>(
+    BookmarkBloc(
+      getCityUseCase: locator(),
+      saveCityUseCase: locator(),
+      getAllCityUseCase: locator(),
+      deleteCityUseCase: locator(),
+    ),
+  );
 }

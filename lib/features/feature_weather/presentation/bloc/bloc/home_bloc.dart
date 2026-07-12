@@ -10,14 +10,16 @@ part 'home_event.dart';
 part 'home_state.dart';
 
 class HomeBloc extends Bloc<HomeEvent, HomeState> {
-  final GetCurrentWeatherUsecase _getCurrentWeatherUsecase;
-  final GetForecastWeatherUseCase _getForecastWeatherUseCase;
+  final GetCurrentWeatherUsecase getCurrentWeatherUsecase;
+  final GetForecastWeatherUseCase getForecastWeatherUseCase;
 
-  HomeBloc(this._getCurrentWeatherUsecase, this._getForecastWeatherUseCase)
-    : super(HomeLoading()) {
+  HomeBloc({
+    required this.getCurrentWeatherUsecase,
+    required this.getForecastWeatherUseCase,
+  }) : super(HomeLoading()) {
     on<LoadCwEvent>((event, emit) async {
       if (state is! HomeCompleted) emit(HomeLoading());
-      final dataState = await _getCurrentWeatherUsecase(event.cityName);
+      final dataState = await getCurrentWeatherUsecase(event.cityName);
       if (dataState is DataSuccess) {
         final current = state is HomeCompleted
             ? state as HomeCompleted
@@ -30,7 +32,7 @@ class HomeBloc extends Bloc<HomeEvent, HomeState> {
 
     on<LoadFwEvent>((event, emit) async {
       if (state is! HomeCompleted) emit(HomeLoading());
-      final dataState = await _getForecastWeatherUseCase(event.cityName);
+      final dataState = await getForecastWeatherUseCase(event.cityName);
       if (dataState is DataSuccess) {
         final current = state is HomeCompleted
             ? state as HomeCompleted

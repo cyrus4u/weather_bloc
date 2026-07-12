@@ -20,19 +20,19 @@ class BookmarkBloc extends Bloc<BookmarkEvent, BookmarkState> {
   GetAllCityUseCase getAllCityUseCase;
   DeleteCityUseCase deleteCityUseCase;
 
-  BookmarkBloc(
-    this.getCityUseCase,
-    this.saveCityUseCase,
-    this.getAllCityUseCase,
-    this.deleteCityUseCase,
-  ) : super(
-        BookmarkState(
-          getCityStatus: GetCityLoading(),
-          saveCityStatus: SaveCityInitial(),
-          getAllCityStatus: GetAllCityLoading(),
-          deleteCityStatus: DeleteCityInitial(),
-        ),
-      ) {
+  BookmarkBloc({
+    required this.getCityUseCase,
+    required this.saveCityUseCase,
+    required this.getAllCityUseCase,
+    required this.deleteCityUseCase,
+  }) : super(
+         BookmarkState(
+           getCityStatus: GetCityLoading(),
+           saveCityStatus: SaveCityInitial(),
+           getAllCityStatus: GetAllCityLoading(),
+           deleteCityStatus: DeleteCityInitial(),
+         ),
+       ) {
     /// City Delete Event
     on<DeleteCityEvent>((event, emit) async {
       /// emit Loading state
