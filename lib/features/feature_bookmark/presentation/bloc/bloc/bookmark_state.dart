@@ -14,16 +14,16 @@ class BookmarkState extends Equatable {
   });
 
   BookmarkState copyWith({
-    GetCityStatus? newCityStatus,
-    SaveCityStatus? newSaveStatus,
-    GetAllCityStatus? newGetAllCityStatus,
-    DeleteCityStatus? newDeleteCityStatus,
+    GetCityStatus? getCityStatus,
+    SaveCityStatus? saveCityStatus,
+    GetAllCityStatus? getAllCityStatus,
+    DeleteCityStatus? deleteCityStatus,
   }) {
     return BookmarkState(
-      getCityStatus: newCityStatus ?? getCityStatus,
-      saveCityStatus: newSaveStatus ?? saveCityStatus,
-      getAllCityStatus: newGetAllCityStatus ?? getAllCityStatus,
-      deleteCityStatus: newDeleteCityStatus ?? deleteCityStatus,
+      getCityStatus: getCityStatus ?? this.getCityStatus,
+      saveCityStatus: saveCityStatus ?? this.saveCityStatus,
+      getAllCityStatus: getAllCityStatus ?? this.getAllCityStatus,
+      deleteCityStatus: deleteCityStatus ?? this.deleteCityStatus,
     );
   }
 

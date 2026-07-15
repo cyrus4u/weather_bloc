@@ -36,23 +36,21 @@ class BookmarkBloc extends Bloc<BookmarkEvent, BookmarkState> {
     /// City Delete Event
     on<DeleteCityEvent>((event, emit) async {
       /// emit Loading state
-      emit(state.copyWith(newDeleteCityStatus: DeleteCityLoading()));
+      emit(state.copyWith(deleteCityStatus: DeleteCityLoading()));
 
       DataState dataState = await deleteCityUseCase(event.name);
 
       /// emit Complete state
       if (dataState is DataSuccess) {
         emit(
-          state.copyWith(
-            newDeleteCityStatus: DeleteCityCompleted(dataState.data),
-          ),
+          state.copyWith(deleteCityStatus: DeleteCityCompleted(dataState.data)),
         );
       }
 
       /// emit Error state
       if (dataState is DataFailed) {
         emit(
-          state.copyWith(newDeleteCityStatus: DeleteCityError(dataState.error)),
+          state.copyWith(deleteCityStatus: DeleteCityError(dataState.error)),
         );
       }
     });
@@ -60,23 +58,21 @@ class BookmarkBloc extends Bloc<BookmarkEvent, BookmarkState> {
     /// get All city
     on<GetAllCityEvent>((event, emit) async {
       /// emit Loading state
-      emit(state.copyWith(newGetAllCityStatus: GetAllCityLoading()));
+      emit(state.copyWith(getAllCityStatus: GetAllCityLoading()));
 
       DataState dataState = await getAllCityUseCase(NoParams());
 
       /// emit Complete state
       if (dataState is DataSuccess) {
         emit(
-          state.copyWith(
-            newGetAllCityStatus: GetAllCityCompleted(dataState.data),
-          ),
+          state.copyWith(getAllCityStatus: GetAllCityCompleted(dataState.data)),
         );
       }
 
       /// emit Error state
       if (dataState is DataFailed) {
         emit(
-          state.copyWith(newGetAllCityStatus: GetAllCityError(dataState.error)),
+          state.copyWith(getAllCityStatus: GetAllCityError(dataState.error)),
         );
       }
     });
@@ -85,39 +81,39 @@ class BookmarkBloc extends Bloc<BookmarkEvent, BookmarkState> {
 
     on<GetCityByNameEvent>((event, emit) async {
       /// emit Loading state
-      emit(state.copyWith(newCityStatus: GetCityLoading()));
+      emit(state.copyWith(getCityStatus: GetCityLoading()));
       DataState dataState = await getCityUseCase(event.cityName);
 
       /// emit Complete state
       if (dataState is DataSuccess) {
-        emit(state.copyWith(newCityStatus: GetCityCompleted(dataState.data)));
+        emit(state.copyWith(getCityStatus: GetCityCompleted(dataState.data)));
       }
       if (dataState is DataFailed) {
-        emit(state.copyWith(newCityStatus: GetCityError(dataState.error)));
+        emit(state.copyWith(getCityStatus: GetCityError(dataState.error)));
       }
     });
 
     /// Save City Event
     on<SaveCwEvent>((event, emit) async {
       /// emit Loading state
-      emit(state.copyWith(newSaveStatus: SaveCityLoading()));
+      emit(state.copyWith(saveCityStatus: SaveCityLoading()));
 
       DataState dataState = await saveCityUseCase(event.name);
 
       /// emit Complete state
       if (dataState is DataSuccess) {
-        emit(state.copyWith(newSaveStatus: SaveCityCompleted(dataState.data)));
+        emit(state.copyWith(saveCityStatus: SaveCityCompleted(dataState.data)));
       }
 
       /// emit Error state
       if (dataState is DataFailed) {
-        emit(state.copyWith(newSaveStatus: SaveCityError(dataState.error)));
+        emit(state.copyWith(saveCityStatus: SaveCityError(dataState.error)));
       }
     });
 
     /// set to init again SaveCity (برای بار دوم و سوم و غیره باید وضعیت دوباره به حالت اول برگرده وگرنه بوکمارک پر خواهد ماند)
     on<SaveCityInitialEvent>((event, emit) async {
-      emit(state.copyWith(newSaveStatus: SaveCityInitial()));
+      emit(state.copyWith(saveCityStatus: SaveCityInitial()));
     });
   }
 }

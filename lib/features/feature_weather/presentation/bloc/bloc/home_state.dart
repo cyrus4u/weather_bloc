@@ -15,12 +15,18 @@ final class HomeCompleted extends HomeState {
 
   const HomeCompleted({this.city, this.forecast});
 
+  // Returns a new HomeCompleted object, optionally overriding city and/or forecast,
+  // while keeping any field that wasn't passed in unchanged.
   HomeCompleted copyWith({
-    CurrentCityEntity? city,
-    ForecastDaysEntity? forecast,
+    CurrentCityEntity? city, // new city value (optional, nullable)
+    ForecastDaysEntity? forecast, // new forecast value (optional, nullable)
   }) {
     return HomeCompleted(
+      // if `city` param was provided (not null), use it;
+      // otherwise fall back to the existing value on this object
       city: city ?? this.city,
+
+      // same logic: use new forecast if given, else keep the old one
       forecast: forecast ?? this.forecast,
     );
   }
@@ -37,4 +43,3 @@ final class HomeError extends HomeState {
   @override
   List<Object?> get props => [message];
 }
-
