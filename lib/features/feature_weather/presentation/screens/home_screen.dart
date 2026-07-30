@@ -33,6 +33,7 @@ class _HomeScreenState extends State<HomeScreen>
     // TODO: implement initState
     super.initState();
     BlocProvider.of<HomeBloc>(context).add(LoadCwEvent(cityName));
+    ///context.read<HomeBloc>().add(LoadCwEvent(cityName));
 
     /// start load Fw event
     BlocProvider.of<HomeBloc>(context).add(LoadFwEvent(cityName));

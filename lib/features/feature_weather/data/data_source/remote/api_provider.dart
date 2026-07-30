@@ -1,5 +1,4 @@
 import 'package:dio/dio.dart';
-import 'package:weather_bloc/core/params/forecast_params.dart';
 import 'package:weather_bloc/core/utils/constants.dart';
 
 class ApiProvider {
