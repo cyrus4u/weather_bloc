@@ -37,8 +37,8 @@ void main() {
         ).thenAnswer((_) async => DataSuccess(null));
 
         return HomeBloc(
-          mockGetCurrentWeatherUsecase,
-          mockGetForecastWeatherUseCase,
+          getCurrentWeatherUsecase: mockGetCurrentWeatherUsecase,
+          getForecastWeatherUseCase: mockGetForecastWeatherUseCase,
         );
       },
       act: (bloc) => bloc.add(LoadCwEvent(cityName)),
@@ -52,9 +52,9 @@ void main() {
       ).thenAnswer((_) async => DataFailed(error));
 
       final bloc = HomeBloc(
-        mockGetCurrentWeatherUsecase,
-        mockGetForecastWeatherUseCase,
-      );
+          getCurrentWeatherUsecase: mockGetCurrentWeatherUsecase,
+          getForecastWeatherUseCase: mockGetForecastWeatherUseCase,
+        );
 
       expectLater(
         bloc.stream,
